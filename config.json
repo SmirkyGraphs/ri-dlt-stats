@@ -1,0 +1,4 @@
+{   
+    "chromedriver" : "C:/path/to/chromedriver.exe",
+    "save_path" : "D:/path/to/my/folder/"
+}
