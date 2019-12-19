@@ -2,6 +2,7 @@ import json
 import argparse
 from selenium import webdriver
 from src import scraper
+from src import cleaner
 
 def chrome_options(download_dir):
     options = webdriver.ChromeOptions() 
@@ -26,87 +27,50 @@ def arg_parse():
 
     return update
 
-def scrape_current_employment():
-    # get years and download button for ces stats
-    url = 'http://www.dlt.ri.gov/lmi/ces.htm'
-    button_options = '//*[@id="form"]/font/select/option'
-    years = scraper.scrape_years(browser, url, button_options, update)
-    download = '/html/body/table/tbody/tr[4]/td/table/tbody/tr/td/table[1]/tbody/tr[1]/td/b'
+def renamer_dict():
+    # loading dictionary to rename columns and add level
+    file = './data/files/data_dict.json'
+    with open(file) as f:
+        data = json.load(f)
 
-    # scrape sesoanlly adjusted ces stats
-    adjusted_download = f'{download}/span/font/a[1]'
-    scraper.download_ces(browser, 'seasonal', adjusted_download, years)
+    # get order of ces cols
+    order_ces = data['current_employment']['order_cols']
+    order_state = data['statewide_employment']['order_cols']
 
-    # scrape non-adjusted ces stats
-    non_adj_download = f'{download}/font[2]/font[2]/strong/a[1]'
-    scraper.download_ces(browser, 'state', non_adj_download, years)
+    # get rename columns
+    rename_ces_cols = data['current_employment']['non_adjusted']['rename_cols']
 
-def scrape_ui_claims():
-    # get years and download button for ui claims
-    url = 'http://www.dlt.ri.gov/lmi/uiadmin.htm'
-    button_options = '/html/body/table/tbody/tr[4]/td/table/tbody/tr/td/table/tbody/tr[1]/td[2]/table/tbody/tr[7]/td/p/font/select'
-    years = scraper.scrape_years(browser, url, button_options, update)
-    download = '/html/body/table/tbody/tr[4]/td/table/tbody/tr/td/table/tbody/tr[1]/td/p[1]/b/font/a[1]'
+    # get rename dict
+    rename_act = data['current_employment']['non_adjusted']['rename_industry']
+    rename_adj = data['current_employment']['seasonally_adjusted']['rename_industry']
 
-    # scrape ui claims
-    scraper.download_ui(browser, download, years)
-
-def scrape_supply_demand():
-    # get quarter-year for supply & demand
-    url = 'http://www.dlt.ri.gov/lmi/publications/supply&demand.htm'
-    button_options = '/html/body/table/tbody/tr[4]/td/table/tbody/tr/td/table/tbody/tr[2]/td/blockquote/table/tbody/tr[2]/td[3]/select/option'
-    years = scraper.scrape_years(browser, url, button_options, update)
-
-    # scrape supply & demand
-    scraper.download_sd(browser, years)
-
-def scrape_projections():
-    if update == True:
-        return
-
-    # download major industry 
-    download = '/html/body/table/tbody/tr[4]/td/table/tbody/tr/td/table[1]/tbody/tr[1]/td/b/font[2]/font/a[1]'
-    scraper.download_industry_proj(browser, download, 'major')
-
-    # download 3 digit naics industry
-    download = '/html/body/table/tbody/tr[4]/td/table/tbody/tr/td/table[1]/tbody/tr[1]/td/b/font[3]/font/a[1]'
-    scraper.download_industry_proj(browser, download, 'naics3')
-
-    # download specific occupations (uses same download xpath as above)
-    scraper.download_occupation_proj(browser, download, 'occupations')
-
-    # download major occupation groups (uses same download xpath as above)
-    scraper.download_occupation_proj(browser, download, 'major_occ_group')
-
-def scrape_geographic():
-    # download new england unemployment
-    download = '/html/body/table/tbody/tr[4]/td/table/tbody/tr/td/table[1]/tbody/tr[1]/td/b/font[2]/font[2]/a[1]'
-    scraper.download_new_england(browser, download, 'non_adjusted')
-    scraper.download_new_england(browser, download, 'seasonal_adjusted')
-
-    # get employment by city/town
-    url = 'http://www.dlt.ri.gov/lmi/laus/town/town.htm'
-    download = '/html/body/table/tbody/tr[4]/td/table/tbody/tr/td/table[1]/tbody/tr/td/p/b/span/font/a' 
-    button_options = '/html/body/table/tbody/tr[4]/td/table/tbody/tr/td/form/table/tbody/tr[4]/td[2]/select/option'
-    scraper.download_citytown(browser, url, button_options, download)
-
-def scrape_wages():
-    if update == True:
-        return
-
-    # download wage information
-    download = '/html/body/table/tbody/tr[4]/td/table/tbody/tr/td/table[1]/tbody/tr[1]/td/b/font[2]/font[2]/a'
-    scraper.download_wages(browser, download, 'total_wages')
-    scraper.download_wages(browser, download, 'occupation_wages')
-    scraper.download_wages(browser, download, 'new_england_wages')
+    # get level dict
+    level_act = data['current_employment']['non_adjusted']['map_level']
+    level_adj = data['current_employment']['seasonally_adjusted']['map_level']
+    
+    renamer = {
+        'rename_ces_cols': rename_ces_cols,
+        'rename_act': rename_act,
+        'rename_adj': rename_adj,
+        'level_act': level_act,
+        'level_adj': level_adj,
+        'order_ces': order_ces,
+        'order_state': order_state
+    }
+    
+    return renamer
     
 def run_scrapers():
-    scrape_current_employment()
-    scrape_ui_claims()
-    scrape_supply_demand()
-    scrape_projections()
-    scrape_geographic()
-    scrape_wages()
+    scraper.scrape_current_employment(browser, update)
+    scraper.scrape_ui_claims(browser, update)
+    scraper.scrape_supply_demand(browser, update)
+    scraper.scrape_projections(browser, update)
+    scraper.scrape_geographic(browser)
+    scraper.scrape_wages(browser, update)
+
+def run_cleaners():
+    cleaner.clean_ces(rename_dict)
+    cleaner.clean_statewide(rename_dict)
 
 if __name__ == '__main__':
     # load config options
@@ -116,11 +80,16 @@ if __name__ == '__main__':
         chromedriver = config['chromedriver']
 
     # start chrome browser
-    options = chrome_options(save_path)
-    browser = webdriver.Chrome(chromedriver, options=options)
+    #options = chrome_options(save_path)
+    #browser = webdriver.Chrome(chromedriver, options=options)
 
     # check if update
     update = arg_parse()
 
     # scrape all information
-    run_scrapers()
+    #run_scrapers()
+    #browser.close()
+
+    # merge files and clean data
+    rename_dict = renamer_dict()
+    run_cleaners()
