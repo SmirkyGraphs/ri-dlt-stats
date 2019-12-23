@@ -39,6 +39,7 @@ def renamer_dict():
 
     # get rename columns
     rename_ces_cols = data['current_employment']['non_adjusted']['rename_cols']
+    rename_ui_cols = data['ui_insurance']['rename_cols']
 
     # get rename dict
     rename_act = data['current_employment']['non_adjusted']['rename_industry']
@@ -50,6 +51,7 @@ def renamer_dict():
     
     renamer = {
         'rename_ces_cols': rename_ces_cols,
+        'rename_ui_cols': rename_ui_cols,
         'rename_act': rename_act,
         'rename_adj': rename_adj,
         'level_act': level_act,
@@ -69,8 +71,9 @@ def run_scrapers():
     scraper.scrape_wages(browser, update)
 
 def run_cleaners():
-    cleaner.clean_ces(rename_dict)
-    cleaner.clean_statewide(rename_dict)
+    #cleaner.clean_ces(rename_dict)
+    #cleaner.clean_statewide(rename_dict)
+    cleaner.clean_ui(rename_dict)
 
 if __name__ == '__main__':
     # load config options
@@ -80,15 +83,15 @@ if __name__ == '__main__':
         chromedriver = config['chromedriver']
 
     # start chrome browser
-    #options = chrome_options(save_path)
-    #browser = webdriver.Chrome(chromedriver, options=options)
+    options = chrome_options(save_path)
+    browser = webdriver.Chrome(chromedriver, options=options)
 
     # check if update
     update = arg_parse()
 
     # scrape all information
     #run_scrapers()
-    #browser.close()
+    browser.close()
 
     # merge files and clean data
     rename_dict = renamer_dict()

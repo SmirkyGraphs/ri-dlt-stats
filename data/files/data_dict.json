@@ -8,7 +8,7 @@
             "MoM_#", 
             "YoY_%", 
             "YoY_#", 
-            "level", 
+            "industry_level", 
             "report_type"
         ],
         "non_adjusted": {
@@ -159,5 +159,12 @@
             "report_type",
             "date"
         ]
+    },
+    "ui_insurance": {
+        "rename_cols": {
+            "Exhaustion Ratio (12 mos)": "Exhaustion Ratio",
+            "Average Duration (12 mos)": "Average Duration",
+            "Amount of Payments (million)": "Amount of Payments"
+        }
     }
 }
