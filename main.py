@@ -71,8 +71,8 @@ def run_scrapers():
     scraper.scrape_wages(browser, update)
 
 def run_cleaners():
-    #cleaner.clean_ces(rename_dict)
-    #cleaner.clean_statewide(rename_dict)
+    cleaner.clean_ces(rename_dict)
+    cleaner.clean_statewide(rename_dict)
     cleaner.clean_ui(rename_dict)
 
 if __name__ == '__main__':
@@ -90,7 +90,7 @@ if __name__ == '__main__':
     update = arg_parse()
 
     # scrape all information
-    #run_scrapers()
+    run_scrapers()
     browser.close()
 
     # merge files and clean data
