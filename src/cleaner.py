@@ -223,8 +223,9 @@ def clean_ui(rename_dict):
     # normalize some rounded to tenth and some not
     df['value'] = round(df['value'], 1)
 
-    # fix mix-matched naming
+    # fix mix-matched naming & convert amount back to millions
     df['value_type'] = df['value_type'].map(rename_cols).fillna(df['value_type'])
+    df.loc[df['value_type']=='Amount of Payments', 'value'] = df['value']*1000000
 
     # fix date & remove null months
     df = make_date(df, '%B')
