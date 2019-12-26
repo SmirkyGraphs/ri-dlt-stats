@@ -28,6 +28,6 @@ Currently these are the data sources that are collected from `scraper.py`.
 
 Currently these are the data sources that are cleaned from `cleaner.py`.
 
-- [current employment stats](http://www.dlt.ri.gov/lmi/ces.htm)
+- [current employment stats](https://drive.google.com/uc?export=download&id=172-erLbyV1JmLEdfZ8wOGSG-Z-FN0cky)
 - [monthly ui claims](http://www.dlt.ri.gov/lmi/uiadmin.htm)
 - [statewide labor force](http://www.dlt.ri.gov/lmi/laus/state/state.htm)
