@@ -9,6 +9,11 @@ You must have Python 3 installed.  You can download it
 To use selenium you will need the [chromedriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) version matching your chrome browser.  
 The `config.json` needs to be edited with your chromedriver path and the path for your `/data/temp` folder location.
 
+## Running the Code
+
+Run `main.py` to run the code for the first time to collect information from all years.  
+Run `main.py --update` to only get the most recent monthly data.
+
 ## Data Collection
 
 Currently these are the data sources that are collected from `scraper.py`.
@@ -26,8 +31,8 @@ Currently these are the data sources that are collected from `scraper.py`.
 
 ## Data Cleaning
 
-Currently these are the data sources that are cleaned from `cleaner.py`.
+Currently these are the datasets produced from `cleaner.py`.
 
 - [current employment stats](https://drive.google.com/uc?export=download&id=172-erLbyV1JmLEdfZ8wOGSG-Z-FN0cky)
-- [monthly ui claims](http://www.dlt.ri.gov/lmi/uiadmin.htm)
-- [statewide labor force](http://www.dlt.ri.gov/lmi/laus/state/state.htm)
+- [monthly ui claims](https://drive.google.com/uc?export=download&id=1L_LzSpYCit3pSYA_0EceXeEYgXdFSG8I)
+- [statewide labor force](https://drive.google.com/uc?export=download&id=1LHThi6WTyVPnFu4hS-kBMTBfgcvbhlhM)
