@@ -13,7 +13,7 @@ def chrome_options(download_dir):
         'download.default_directory' : f'{download_dir}',
     }
 
-    #options.add_argument('--headless')
+    options.add_argument('--headless')
     options.add_argument('--disable-gpu')
     options.add_experimental_option('prefs', prefs)
 
@@ -63,6 +63,12 @@ def renamer_dict():
     return renamer
     
 def run_scrapers():
+    # make folders
+    print('[status] generating folders...')
+    scraper.make_dirs(paths)
+
+    # run scrapers
+    print('[status] starting scrapers...')
     scraper.scrape_current_employment(browser, update)
     scraper.scrape_ui_claims(browser, update)
     scraper.scrape_supply_demand(browser, update)
@@ -71,6 +77,7 @@ def run_scrapers():
     scraper.scrape_wages(browser, update)
 
 def run_cleaners():
+    print('[status] cleaning data...')
     cleaner.clean_ces(rename_dict)
     cleaner.clean_statewide(rename_dict)
     cleaner.clean_ui(rename_dict)
@@ -81,6 +88,7 @@ if __name__ == '__main__':
         config = json.load(f)
         save_path = config['save_path']
         chromedriver = config['chromedriver']
+        paths = config['folder_paths']
 
     # start chrome browser
     options = chrome_options(save_path)
