@@ -2,6 +2,12 @@ import os
 import time
 import shutil
 
+# make folder paths
+def make_dirs(paths):
+    for directory in paths:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
 # scrape years and only most recent with --update
 def scrape_years(browser, url, xpath, update):
     # get years from dropdown options
