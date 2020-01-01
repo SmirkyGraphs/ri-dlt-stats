@@ -31,7 +31,7 @@ def move_file(year, file_path):
     stem_file = temp_file.split('.')[-1]
     
     # check if file finished downloading
-    while stem_file == 'tmp':
+    while stem_file not in ['csv', 'xls', 'xlsx']:
         time.sleep(3)
         print('[status] waiting on file to download...')
         temp_file = temp_path + os.listdir(temp_path)[0]
@@ -196,6 +196,8 @@ def download_wages(browser, xpath, report_type):
 
 ############################ Start of Scrapers ############################
 def scrape_current_employment(browser, update):
+    print('[status] scraping current employment')
+
     # get years and download button for ces stats
     url = 'http://www.dlt.ri.gov/lmi/ces.htm'
     button_options = '//*[@id="form"]/font/select/option'
@@ -211,6 +213,8 @@ def scrape_current_employment(browser, update):
     download_ces(browser, 'state', non_adj_download, years)
 
 def scrape_ui_claims(browser, update):
+    print('[status] scraping ui claims')
+
     # get years and download button for ui claims
     url = 'http://www.dlt.ri.gov/lmi/uiadmin.htm'
     button_options = '/html/body/table/tbody/tr[4]/td/table/tbody/tr/td/table/tbody/tr[1]/td[2]/table/tbody/tr[7]/td/p/font/select/option'
@@ -221,6 +225,8 @@ def scrape_ui_claims(browser, update):
     download_ui(browser, download, years)
 
 def scrape_supply_demand(browser, update):
+    print('[status] scraping supply & demand')
+
     # get quarter-year for supply & demand
     url = 'http://www.dlt.ri.gov/lmi/publications/supply&demand.htm'
     button_options = '/html/body/table/tbody/tr[4]/td/table/tbody/tr/td/table/tbody/tr[2]/td/blockquote/table/tbody/tr[2]/td[3]/select/option'
@@ -232,6 +238,8 @@ def scrape_supply_demand(browser, update):
 def scrape_projections(browser, update):
     if update == True:
         return
+
+    print('[status] scraping projections')
 
     # download major industry 
     download = '/html/body/table/tbody/tr[4]/td/table/tbody/tr/td/table[1]/tbody/tr[1]/td/b/font[2]/font/a[1]'
@@ -248,6 +256,8 @@ def scrape_projections(browser, update):
     download_occupation_proj(browser, download, 'major_occ_group')
 
 def scrape_geographic(browser):
+    print('[status] scraping geographic')
+
     # download statewide unemployment
     download = '/html/body/table/tbody/tr[4]/td/table/tbody/tr/td/table[1]/tbody/tr[1]/td/b/font[2]/a[1]'
     download_statewide(browser, download, 'non_adjusted')
@@ -267,6 +277,8 @@ def scrape_geographic(browser):
 def scrape_wages(browser, update):
     if update == True:
         return
+
+    print('[status] scraping wage information')
 
     # download wage information
     download = '/html/body/table/tbody/tr[4]/td/table/tbody/tr/td/table[1]/tbody/tr[1]/td/b/font[2]/font/a'
