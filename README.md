@@ -36,3 +36,10 @@ Currently these are the datasets produced from `cleaner.py`.
 - [current employment stats](https://drive.google.com/uc?export=download&id=172-erLbyV1JmLEdfZ8wOGSG-Z-FN0cky)
 - [monthly ui claims](https://drive.google.com/uc?export=download&id=1L_LzSpYCit3pSYA_0EceXeEYgXdFSG8I)
 - [statewide labor force](https://drive.google.com/uc?export=download&id=1LHThi6WTyVPnFu4hS-kBMTBfgcvbhlhM)
+
+## Dashboards
+
+Current dashboards created using the cleaned datasets.
+
+- [current employment KPI](https://ivizri.com/posts/2019/11/rhode-island-ces/)
+- [unemployment insurance KPI](https://ivizri.com/posts/2019/12/rhode-island-ui/)
